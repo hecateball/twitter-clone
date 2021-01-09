@@ -1,24 +1,21 @@
 <template>
-  <section>
-    <form id="sign-in" @submit.prevent="signIn">
-      <h2>Sign In</h2>
-      <label for="email">Email</label>
-      <input id="email" type="text" autocomplete="e=mail" v-model="email" />
-      <label for="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        autocomplete="current-password"
-        v-model="password"
-      />
-      <button type="submit" form="sign-in" :disabled="processing">
-        Sign In
-      </button>
-    </form>
-  </section>
-  <section>
-    <RouterLink :to="{ name: 'sign-up' }">新しくアカウントを作る</RouterLink>
-  </section>
+  <h2>サインイン</h2>
+  <form id="sign-in" @submit.prevent="signIn">
+    <label for="email">メールアドレス</label>
+    <input id="email" type="text" autocomplete="e=mail" v-model="email" />
+    <label for="password">パスワード</label>
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+      v-model="password"
+    />
+    <button type="submit" form="sign-in" :disabled="processing">
+      サインイン
+    </button>
+  </form>
+  <h3>アカウントをお持ちでない方はこちら</h3>
+  <RouterLink :to="{ name: 'sign-up' }">新しくアカウントを作る</RouterLink>
 </template>
 
 <script lang="ts">

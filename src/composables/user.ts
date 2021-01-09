@@ -6,6 +6,7 @@ type SignUpInput = {
   displayName: string
   email: string
   password: string
+  accepted: boolean
 }
 
 type SignInInput = {
@@ -32,6 +33,7 @@ export const useSignUp = (observer?: {
     displayName: '',
     email: '',
     password: '',
+    accepted: false,
   })
   const signUp = async () => {
     if (processing.value) {

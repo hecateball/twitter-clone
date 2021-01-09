@@ -3,7 +3,6 @@ import { router } from '~/router'
 import { firebaseInit } from '~/plugins/firebase'
 import { userProvider } from '~/plugins/user'
 import TwitterClone from '~/TwitterClone.vue'
-import '~/assets/mvp.css'
 
 createApp(TwitterClone)
   .use(router)
