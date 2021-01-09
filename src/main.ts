@@ -1,9 +1,12 @@
 import { createApp } from 'vue'
-import App from '~/App.vue'
+import { router } from '~/router'
 import { firebaseInit } from '~/plugins/firebase'
 import { userProvider } from '~/plugins/user'
+import TwitterClone from '~/TwitterClone.vue'
+import '~/assets/mvp.css'
 
-createApp(App)
+createApp(TwitterClone)
+  .use(router)
   .use(firebaseInit, {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
