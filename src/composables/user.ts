@@ -1,6 +1,7 @@
 import { inject, ref, reactive, InjectionKey, Ref } from 'vue'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/firestore'
 
 type SignUpInput = {
   displayName: string
@@ -47,7 +48,15 @@ export const useSignUp = (observer?: {
       await credential.user?.updateProfile({
         displayName: input.displayName,
       })
-      await credential.user?.reload()
+      await credential.user?.getIdTokenResult(true)
+      await firebase
+        .firestore()
+        .collection('users')
+        .doc(credential.user?.uid)
+        .set({
+          displayName: input.displayName,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        })
       if (observer?.onSuccess !== undefined) {
         observer.onSuccess(credential)
       }

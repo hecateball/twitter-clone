@@ -2,65 +2,35 @@
   <section v-if="user">
     <h2>{{ user.displayName }}</h2>
     <form id="status">
-      <input type="text" size="80" placeholder="いまどうしてる？" />
+      <input type="text" size="80" placeholder="いまどうしてる？" required />
       <button type="submit" form="status">ツイートする</button>
     </form>
   </section>
   <hr />
   <main>
-    <article>
-      <h3>なまえ</h3>
-      <small><time>じかん</time></small>
-      <p>本文</p>
-      <a>いいね！</a> 0
-    </article>
-    <hr />
-    <article>
-      <h3>なまえ</h3>
-      <small><time>じかん</time></small>
-      <p>本文</p>
-      <a>いいね！</a> 0
-    </article>
-    <hr />
-    <article>
-      <h3>なまえ</h3>
-      <small><time>じかん</time></small>
-      <p>本文</p>
-      <a>いいね！</a> 0
-    </article>
-    <hr />
+    <Status v-for="status in statuses" :status="status" />
   </main>
-  <button @click="dialog.showModal">サインアウト</button>
-  <dialog ref="dialog">
-    <header>確認</header>
-    <p>サインアウトしますか？</p>
-    <menu>
-      <button @click="signOut">サインアウト</button>
-      <button @click="dialog.close">キャンセル</button>
-    </menu>
-  </dialog>
+  <SignOutDialog v-if="user" />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUser, useSignOut } from '~/composables/user'
+import { defineComponent } from 'vue'
+import { useUser } from '~/composables/user'
+import { useStatuses } from '~/composables/status'
+import Status from '~/components/Status.vue'
+import SignOutDialog from '~/components/SignOutDialog.vue'
 
 export default defineComponent({
+  components: {
+    Status,
+    SignOutDialog,
+  },
   setup: () => {
-    const dialog = ref<HTMLDialogElement>(undefined)
     const { user } = useUser()
-    const router = useRouter()
-    const { signOut } = useSignOut({
-      onSuccess: () => {
-        dialog.value.close()
-        router.push({ name: 'sign-in' })
-      },
-    })
+    const statuses = useStatuses()
     return {
       user,
-      dialog,
-      signOut,
+      statuses,
     }
   },
 })
