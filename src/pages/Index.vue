@@ -1,8 +1,14 @@
 <template>
   <section v-if="user">
     <h2>{{ user.displayName }}</h2>
-    <form id="status">
-      <input type="text" size="80" placeholder="いまどうしてる？" required />
+    <form id="status" @submit.prevent="createStatus">
+      <input
+        type="text"
+        size="80"
+        placeholder="いまどうしてる？"
+        v-model="input"
+        required
+      />
       <button type="submit" form="status">ツイートする</button>
     </form>
   </section>
@@ -16,7 +22,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useUser } from '~/composables/user'
-import { useStatuses } from '~/composables/status'
+import { useCreateStatus, useStatuses } from '~/composables/status'
 import Status from '~/components/Status.vue'
 import SignOutDialog from '~/components/SignOutDialog.vue'
 
@@ -27,10 +33,13 @@ export default defineComponent({
   },
   setup: () => {
     const { user } = useUser()
-    const statuses = useStatuses()
+    const { statuses } = useStatuses()
+    const { createStatus, input } = useCreateStatus()
     return {
       user,
       statuses,
+      input,
+      createStatus,
     }
   },
 })

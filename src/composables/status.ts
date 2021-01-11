@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { useUser } from '~/composables/user'
@@ -14,31 +14,29 @@ export type Status = {
 
 export const useStatuses = () => {
   const statuses = ref<Status[]>([])
-  statuses.value.push({
-    user: {
-      displayName: 'てすとまん',
-    },
-    text: 'さんぷるのテキストです1',
-    likes: 0,
-    createdAt: new Date(),
-  })
-  statuses.value.push({
-    user: {
-      displayName: 'てすとまん',
-    },
-    text: 'さんぷるのテキストです2',
-    likes: 0,
-    createdAt: new Date(),
-  })
-  statuses.value.push({
-    user: {
-      displayName: 'てすとまん',
-    },
-    text: 'さんぷるのテキストです3',
-    likes: 0,
-    createdAt: new Date(),
-  })
-  return statuses
+  const unsubscribe = firebase
+    .firestore()
+    .collectionGroup('statuses')
+    .onSnapshot(async (snapshot) => {
+      const values = []
+      for (const status of snapshot.docs) {
+        const user = await status.ref.parent.parent!.get()
+        values.push({
+          user: {
+            displayName: user.get('displayName'),
+          },
+          text: status.get('text'),
+          likes: status.get('likes'),
+          createdAt: status
+            .get('createdAt', { serverTimestamps: 'estimate' })
+            .toDate()
+            .toISOString(),
+        })
+      }
+      statuses.value = values
+    })
+  onUnmounted(unsubscribe)
+  return { statuses }
 }
 
 export const useCreateStatus = () => {
